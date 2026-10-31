@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kinter — 面向 iOS 的小程序宿主框架</title>
+<meta name="description" content="Kinter 是一个面向 iOS 的小程序宿主框架，以 ZIP 包分发小程序，通过统一的 wx.* API 调用系统原生能力，内置能力网关、权限治理与商店分发。">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><img src="assets/logo.svg" alt="Kinter">Kinter</div>
+    <div class="navlinks">
+      <a href="#features">特性</a>
+      <a href="#capabilities">能力清单</a>
+      <a href="#architecture">架构</a>
+      <a href="#audio-demo">音频演示</a>
+      <a href="#download">下载</a>
+      <a href="https://github.com/KFZ342/kinter-open-source" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><i></i>iOS 16+ · Swift 5 · AGPL-3.0</div>
+      <h1>让小程序在 iOS 上<br><em>安全地调用原生能力</em></h1>
+      <p class="lead">Kinter 是一套「原生宿主 + 小程序生态运行时」。小程序以 ZIP 包分发，页面用 HTML 或 KTML 编写，JavaScript 通过统一的 <code>wx.*</code> Promise API 调用系统能力，每一次调用都经过能力网关的声明校验、级别检查与审计。</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="assets/Kinter-unsigned.ipa">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          下载 IPA
+        </a>
+        <a class="btn btn-ghost" href="#architecture">查看架构</a>
+      </div>
+    </div>
+    <aside class="statcard">
+      <h4>Project Snapshot</h4>
+      <div class="stat"><span class="k">原生能力</span><span class="v">45 项</span></div>
+      <div class="stat"><span class="k">能力分级</span><span class="v">L0 / L1 / L2</span></div>
+      <div class="stat"><span class="k">页面栈深度</span><span class="v">10 层</span></div>
+      <div class="stat"><span class="k">开发者分成</span><span class="v">79.05%</span></div>
+      <div class="stat"><span class="k">最低系统</span><span class="v">iOS 16</span></div>
+    </aside>
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-kicker">Product Features</div>
+      <h2 class="sec-title">为可生产的小程序运行时而设计</h2>
+      <p class="sec-desc">不是简单的 JS 沙箱，而是有边界的能力执行平台。声明、分级、权限、隔离、审计构成完整的治理链路。</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6v6H9z"/></svg></div>
+        <h3>能力网关</h3>
+        <p>声明校验、L0/L1/L2 分级、地区与系统权限检查、ObjC 异常隔离，每个会话独立实例，杜绝状态串扰。</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>显式能力声明</h3>
+        <p>每项能力都必须在 manifest.json 中声明，未声明调用被拒绝并返回 capability_not_declared。</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <h3>KTML 模板引擎</h3>
+        <p>column / text / for / if 声明式组件，支持数据绑定与自动 HTML 转义，兼顾 HTML 与模板两种写法。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0;border-top:none">
+  <div class="wrap">
+    <div class="grid">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="8" y1="9" x2="8" y2="20"/></svg></div>
+        <h3>多实例多窗口</h3>
+        <p>同一设备并行运行多个应用实例，各自独立的能力网关与会话状态，彼此互不干扰。</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.3 7 12 12 20.7 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></div>
+        <h3>商店与分发</h3>
+        <p>多源聚合、版本比较、SHA256 校验与下载，支持静态商店源、付费小程序与 79.05% 开发者分成。</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M19.1 4.9l-2.8 2.8M7.7 16.3l-2.8 2.8"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <h3>AI 生成小程序</h3>
+        <p>基于 OpenAI 兼容接口，用自然语言生成小程序包并迭代修改，降低从想法到上架的门槛。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="capabilities">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-kicker">Capabilities</div>
+      <h2 class="sec-title">45 项原生能力，分级治理</h2>
+      <p class="sec-desc">每个按钮 = 一次 模块.方法 调用，经网关卡点校验后由对应 Provider 调用原生框架。</p>
+    </div>
+    <div class="cap-legend">
+      <span><b class="lv lv-L0">L0</b> 无授权</span>
+      <span><b class="lv lv-L1">L1</b> 系统弹窗授权</span>
+      <span><b class="lv lv-L2">L2</b> 需要 entitlement</span>
+    </div>
+    <div id="cap-root"><p style="color:var(--muted)">正在加载能力清单…</p></div>
+  </div>
+</section>
+
+<section id="architecture">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-kicker">Architecture</div>
+      <h2 class="sec-title">四层架构，链路清晰</h2>
+      <p class="sec-desc">从页面脚本到原生框架，每一层职责单一、边界明确，异常在网关处被隔离，不会拖垮宿主。</p>
+    </div>
+    <div class="arch-wrap">
+      <img src="assets/architecture.svg" alt="Kinter 架构分层图">
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap dl">
+    <div class="dlbox">
+      <h3>下载 Kinter 宿主</h3>
+      <p style="color:var(--muted);font-size:14px">开箱即用的未签名 IPA，安装前请自行签名。</p>
+      <div class="meta">
+        <span>版本 <b>最新构建</b></span>
+        <span>大小 <b>603 KB</b></span>
+        <span>格式 <b>未签名 IPA</b></span>
+      </div>
+      <a class="btn btn-primary" href="assets/Kinter-unsigned.ipa" style="width:100%;justify-content:center">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        下载 Kinter-unsigned.ipa
+      </a>
+    </div>
+    <div>
+      <h3 style="font-size:17px;margin-bottom:20px">安装方式</h3>
+      <ol class="steps">
+        <li>TrollStore：直接安装，无需签名。</li>
+        <li>SideStore / AltStore / Sideloadly：使用自签证书签名后安装。</li>
+        <li>首次启动前，在设置 → 隐私与安全性中开启开发者模式。</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+
+<section id="audio-demo">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-kicker">Capability Demo</div>
+      <h2 class="sec-title">原生音频能力</h2>
+      <p class="sec-desc">演示 Kinter 小程序通过 wx.audio / wx.music 调起系统原生音频播放器的能力。基于 AVAudioPlayer，支持后台播放。下方测试音乐由开发者本人独立制作，仅用于展示音频播放能力。</p>
+    </div>
+    <div class="audio-player">
+      <button id="play-btn" class="play-btn">
+        <svg id="play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg id="pause-icon" style="display:none" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+      <div class="audio-info">
+        <div class="audio-title">Kinter 测试音乐.mp3</div>
+        <div class="progress-wrap" id="progress-wrap">
+          <div class="progress-bar" id="progress-bar"><div class="progress-inner" id="progress-inner"></div></div>
+          <div class="time-display"><span id="current-time">0:00</span><span id="duration">0:00</span></div>
+        </div>
+      </div>
+    </div>
+    <audio id="audio-el" src="assets/testmusic.mp3"></audio>
+  </div>
+</section>
+
+<section id="code">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-kicker">Developer Experience</div>
+      <h2 class="sec-title">一个 ZIP 包，两种写法</h2>
+      <p class="sec-desc">声明能力后即可直接调用原生接口，Promise 风格统一错误处理。</p>
+    </div>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div>
+        <h3 style="font-size:14px;color:var(--dim);margin-bottom:12px">manifest.json</h3>
+        <div class="codeblock">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <pre>{
+  <span class="st">"appId"</span>: <span class="st">"com.example.hello"</span>,
+  <span class="st">"version"</span>: <span class="st">"1.0.0"</span>,
+  <span class="st">"pages"</span>: [<span class="st">"index"</span>],
+  <span class="st">"capabilities"</span>: {
+    <span class="st">"deviceInfo"</span>: { <span class="st">"level"</span>: <span class="st">"L0"</span> },
+    <span class="st">"files"</span>: { <span class="st">"level"</span>: <span class="st">"L0"</span> }
+  }
+}</pre>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:14px;color:var(--dim);margin-bottom:12px">JavaScript / wx API</h3>
+        <div class="codeblock">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <pre><span class="cm">// 声明后直接调用原生相机</span>
+<span class="fn">wx</span>.<span class="fn">chooseImage</span>({ count: <span class="st">1</span> })
+  .<span class="fn">then</span>(res =&gt; {
+    <span class="fn">console</span>.<span class="fn">log</span>(res.tempFilePaths)
+  })
+  .<span class="fn">catch</span>(err =&gt; {
+    <span class="fn">console</span>.<span class="fn">error</span>(err.code)
+  })</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>Kinter · 面向 iOS 的小程序宿主框架 · AGPL-3.0</div>
+    <div><a href="https://github.com/KFZ342/kinter-open-source" target="_blank" rel="noopener">GitHub</a> · <a href="#download">下载</a> · <a href="#capabilities">能力</a></div>
+  </div>
+</footer>
+
+<script>
+const CAPS = {
+  "total": 45,
+  "levels": {
+    "L0": "无授权",
+    "L1": "系统弹窗授权",
+    "L2": "需要 entitlement"
+  },
+  "groups": [
+    {
+      "name": "媒体与位置",
+      "items": [
+        { "name": "camera", "label": "相机", "level": "L1" },
+        { "name": "photo", "label": "相册", "level": "L1" },
+        { "name": "microphone", "label": "麦克风", "level": "L1" },
+        { "name": "speech", "label": "语音识别", "level": "L1" },
+        { "name": "location", "label": "定位", "level": "L1" },
+        { "name": "locationWatch", "label": "持续定位", "level": "L1" },
+        { "name": "videoRecord", "label": "视频录制", "level": "L1" },
+        { "name": "qrScan", "label": "扫码", "level": "L1" },
+        { "name": "savePhoto", "label": "保存相册", "level": "L1" }
+      ]
+    },
+    {
+      "name": "设备与系统",
+      "items": [
+        { "name": "deviceInfo", "label": "设备信息", "level": "L0" },
+        { "name": "battery", "label": "电池", "level": "L0" },
+        { "name": "network", "label": "网络状态", "level": "L0" },
+        { "name": "motion", "label": "陀螺仪", "level": "L1" },
+        { "name": "bluetooth", "label": "蓝牙", "level": "L1" },
+        { "name": "bluetoothScan", "label": "蓝牙扫描", "level": "L1" },
+        { "name": "vibrate", "label": "震动", "level": "L0" },
+        { "name": "brightness", "label": "屏幕亮度", "level": "L0" },
+        { "name": "screenAwake", "label": "屏幕常亮", "level": "L0" }
+      ]
+    },
+    {
+      "name": "系统集成",
+      "items": [
+        { "name": "contacts", "label": "通讯录", "level": "L1" },
+        { "name": "calendar", "label": "日历", "level": "L1" },
+        { "name": "reminder", "label": "提醒事项", "level": "L1" },
+        { "name": "notification", "label": "通知", "level": "L1" },
+        { "name": "share", "label": "分享", "level": "L0" },
+        { "name": "openURL", "label": "打开 URL", "level": "L0" },
+        { "name": "communication", "label": "拨号/短信/邮件", "level": "L0" }
+      ]
+    },
+    {
+      "name": "数据与网络",
+      "items": [
+        { "name": "storage", "label": "本地存储", "level": "L0" },
+        { "name": "clipboard", "label": "剪贴板", "level": "L0" },
+        { "name": "clipboardImage", "label": "剪贴板图片", "level": "L0" },
+        { "name": "files", "label": "文件", "level": "L0" },
+        { "name": "http", "label": "HTTP 请求", "level": "L0" },
+        { "name": "websocket", "label": "WebSocket", "level": "L0" },
+        { "name": "upload", "label": "文件上传", "level": "L0" },
+        { "name": "networkWatch", "label": "网络监听", "level": "L0" }
+      ]
+    },
+    {
+      "name": "扩展与进阶",
+      "items": [
+        { "name": "tts", "label": "文字转语音", "level": "L0" },
+        { "name": "qrGenerate", "label": "生成二维码", "level": "L0" },
+        { "name": "ocr", "label": "文字识别", "level": "L0" },
+        { "name": "audio", "label": "音频播放", "level": "L0" },
+        { "name": "image", "label": "图片压缩", "level": "L0" },
+        { "name": "pdf", "label": "PDF 生成", "level": "L0" },
+        { "name": "print", "label": "打印", "level": "L0" },
+        { "name": "biometric", "label": "Face ID", "level": "L1" },
+        { "name": "health", "label": "健康步数", "level": "L2" }
+      ]
+    },
+    {
+      "name": "账号与生态",
+      "items": [
+        { "name": "account", "label": "账号信息", "level": "L0" },
+        { "name": "spotlight", "label": "系统搜索", "level": "L0" },
+        { "name": "liveActivity", "label": "实时活动", "level": "L2" }
+      ]
+    }
+  ]
+};
+function levelBadge(l){return '<b class="lv lv-'+l+'">'+l+'</b>'}
+function renderCaps(){
+  const root=document.getElementById('cap-root');
+  root.innerHTML=CAPS.groups.map(g=>'<div class="capgroup"><h3>'+g.name+'</h3><div class="capitems">'+
+    g.items.map(it=>'<div class="capitem"><div><span class="nm">'+it.label+'</span><code>'+it.name+'</code></div>'+levelBadge(it.level)+'</div>').join('')+
+    '</div></div>').join('');
+}
+renderCaps();
+
+// 音频播放逻辑
+const audio = document.getElementById('audio-el');
+const playBtn = document.getElementById('play-btn');
+const playIcon = document.getElementById('play-icon');
+const pauseIcon = document.getElementById('pause-icon');
+const progressInner = document.getElementById('progress-inner');
+const curTimeEl = document.getElementById('current-time');
+const durEl = document.getElementById('duration');
+const progWrap = document.getElementById('progress-wrap');
+
+function formatTime(s){
+  if(isNaN(s)) return '0:00';
+  const m = Math.floor(s/60); const sec = Math.floor(s%60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+audio.addEventListener('loadedmetadata', () => { durEl.textContent = formatTime(audio.duration); });
+audio.addEventListener('timeupdate', () => {
+  const pct = (audio.currentTime / audio.duration) * 100;
+  progressInner.style.width = pct + '%';
+  curTimeEl.textContent = formatTime(audio.currentTime);
+});
+audio.addEventListener('ended', () => {
+  playIcon.style.display = 'block'; pauseIcon.style.display = 'none';
+  progressInner.style.width = '0%'; curTimeEl.textContent = '0:00';
+});
+
+playBtn.addEventListener('click', () => {
+  if(audio.paused){
+    audio.play(); playIcon.style.display = 'none'; pauseIcon.style.display = 'block';
+  } else {
+    audio.pause(); playIcon.style.display = 'block'; pauseIcon.style.display = 'none';
+  }
+});
+
+progWrap.addEventListener('click', (e) => {
+  const rect = progWrap.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  if(audio.duration) audio.currentTime = pct * audio.duration;
+});
+
+</script>
+</body>
+</html>
