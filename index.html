@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div id="cursor-glow"></div>
 
 <nav>
   <div class="wrap">
@@ -49,7 +50,7 @@
   </div>
 </header>
 
-<section id="features">
+<section id="features" class="reveal">
   <div class="wrap">
     <div class="sec-head">
       <div class="sec-kicker">Product Features</div>
@@ -98,7 +99,7 @@
   </div>
 </section>
 
-<section id="capabilities">
+<section id="capabilities" class="reveal">
   <div class="wrap">
     <div class="sec-head">
       <div class="sec-kicker">Capabilities</div>
@@ -114,7 +115,7 @@
   </div>
 </section>
 
-<section id="architecture">
+<section id="architecture" class="reveal">
   <div class="wrap">
     <div class="sec-head">
       <div class="sec-kicker">Architecture</div>
@@ -127,7 +128,7 @@
   </div>
 </section>
 
-<section id="download">
+<section id="download" class="reveal">
   <div class="wrap dl">
     <div class="dlbox">
       <h3>下载 Kinter 宿主</h3>
@@ -154,7 +155,7 @@
 </section>
 
 
-<section id="audio-demo">
+<section id="audio-demo" class="reveal">
   <div class="wrap">
     <div class="sec-head">
       <div class="sec-kicker">Capability Demo</div>
@@ -178,7 +179,7 @@
   </div>
 </section>
 
-<section id="code">
+<section id="code" class="reveal">
   <div class="wrap">
     <div class="sec-head">
       <div class="sec-kicker">Developer Experience</div>
@@ -316,52 +317,37 @@ function levelBadge(l){return '<b class="lv lv-'+l+'">'+l+'</b>'}
 function renderCaps(){
   const root=document.getElementById('cap-root');
   root.innerHTML=CAPS.groups.map(g=>'<div class="capgroup"><h3>'+g.name+'</h3><div class="capitems">'+
-    g.items.map(it=>'<div class="capitem"><div><span class="nm">'+it.label+'</span><code>'+it.name+'</code></div>'+levelBadge(it.level)+'</div>').join('')+
+    g.items.map((it, i)=>'<div class="capitem" style="transition-delay: '+((i % 12) * 30)+'ms"><div><span class="nm">'+it.label+'</span><code>'+it.name+'</code></div>'+levelBadge(it.level)+'</div>').join('')+
     '</div></div>').join('');
 }
+
+// 1. 先渲染能力数据
 renderCaps();
 
-// 音频播放逻辑
-const audio = document.getElementById('audio-el');
-const playBtn = document.getElementById('play-btn');
-const playIcon = document.getElementById('play-icon');
-const pauseIcon = document.getElementById('pause-icon');
-const progressInner = document.getElementById('progress-inner');
-const curTimeEl = document.getElementById('current-time');
-const durEl = document.getElementById('duration');
-const progWrap = document.getElementById('progress-wrap');
-
-function formatTime(s){
-  if(isNaN(s)) return '0:00';
-  const m = Math.floor(s/60); const sec = Math.floor(s%60);
-  return m + ':' + (sec < 10 ? '0' : '') + sec;
-}
-
-audio.addEventListener('loadedmetadata', () => { durEl.textContent = formatTime(audio.duration); });
-audio.addEventListener('timeupdate', () => {
-  const pct = (audio.currentTime / audio.duration) * 100;
-  progressInner.style.width = pct + '%';
-  curTimeEl.textContent = formatTime(audio.currentTime);
-});
-audio.addEventListener('ended', () => {
-  playIcon.style.display = 'block'; pauseIcon.style.display = 'none';
-  progressInner.style.width = '0%'; curTimeEl.textContent = '0:00';
+// 2. 鼠标跟随光晕
+const glow = document.getElementById('cursor-glow');
+document.addEventListener('mousemove', (e) => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
 });
 
-playBtn.addEventListener('click', () => {
-  if(audio.paused){
-    audio.play(); playIcon.style.display = 'none'; pauseIcon.style.display = 'block';
-  } else {
-    audio.pause(); playIcon.style.display = 'block'; pauseIcon.style.display = 'none';
-  }
-});
+// 3. 滚动监听（监听页面区块 + 能力卡片瀑布流）
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // 如果是能力清单容器进入视野，触发内部卡片的瀑布流
+      if (entry.target.id === 'cap-root') {
+        entry.target.querySelectorAll('.capitem').forEach(c => c.classList.add('visible'));
+      }
+    }
+  });
+}, { threshold: 0.1 });
 
-progWrap.addEventListener('click', (e) => {
-  const rect = progWrap.getBoundingClientRect();
-  const pct = (e.clientX - rect.left) / rect.width;
-  if(audio.duration) audio.currentTime = pct * audio.duration;
-});
-
+// 监听静态 block
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// 监听能力清单容器
+observer.observe(document.getElementById('cap-root'));
 </script>
 </body>
 </html>

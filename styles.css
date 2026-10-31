@@ -130,3 +130,113 @@ footer a{color:var(--muted)}footer a:hover{color:var(--accent)}
 .progress-bar{height:6px;background:#1e2a44;border-radius:3px;overflow:hidden;margin-bottom:8px}
 .progress-inner{height:100%;background:var(--accent);width:0%;border-radius:3px;transition:width .1s linear}
 .time-display{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
+
+/* === 新增动态特效 === */
+
+/* 鼠标光晕 */
+#cursor-glow {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.06) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  transition: opacity 0.3s;
+}
+
+/* 首屏背景网格 */
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+  animation: gridMove 10s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 40px; }
+}
+.hero-grid { position: relative; z-index: 1; }
+
+/* 滚动入场动画基础类 */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 卡片悬浮动效 */
+.card, .capitem {
+  transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.2), inset 0 0 0 1px rgba(56, 189, 248, 0.1);
+}
+.card:hover .ic {
+  transform: scale(1.1) rotate(5deg);
+  transition: transform 0.3s;
+}
+
+/* 能力清单卡片错落 */
+.capitem {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.capitem.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.capitem:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
+  background: #14233d;
+  transform: translateX(4px);
+}
+
+/* 按钮光泽效果 */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: skewX(-20deg);
+  animation: shine 3s infinite;
+}
+@keyframes shine {
+  0% { left: -100%; }
+  20% { left: 200%; }
+  100% { left: 200%; }
+}
+
+/* 修复能力清单的过渡 */
+.capitem {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+.capitem.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
